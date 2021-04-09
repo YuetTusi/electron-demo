@@ -6,9 +6,19 @@ let config = {
 	entry: { index: './src/renderer/index/index.tsx', demo: './src/renderer/demo/demo.tsx' },
 	output: {
 		filename: '[name].js',
-		path: path.join(__dirname, './dist/renderer')
+		path: path.join(__dirname, './dist/renderer'),
+		publicPath: 'http://localhost:8080' //配置路径以保证热更新正确
 	},
-	target: ['electron-renderer'],
+	target: 'electron-renderer',
+	devServer: {
+		contentBase: path.join(__dirname, './dist'),
+		port: 8080,
+		compress: true,
+		open: false,
+		overlay: {
+			errors: true
+		}
+	},
 	module: {
 		rules: [
 			{

@@ -4,11 +4,11 @@ let mainWindow: BrowserWindow | null = null;
 let demoWindow: BrowserWindow | null = null;
 
 function destroyWindow() {
-    if (demoWindow) {
+    if (demoWindow && !demoWindow.isDestroyed) {
         demoWindow.destroy();
         demoWindow = null;
     }
-    if (mainWindow) {
+    if (mainWindow && !mainWindow.isDestroyed) {
         mainWindow.destroy();
         mainWindow = null;
     }
@@ -26,7 +26,8 @@ ipcMain.on('open-demo-window', () => {
                 contextIsolation: false
             }
         });
-        demoWindow.loadFile('dist/renderer/demo.html');
+        // demoWindow.loadFile('dist/renderer/demo.html');
+        demoWindow.loadURL('http://localhost:8080/demo.html');
     } else {
         demoWindow.show();
     }
@@ -45,10 +46,12 @@ app.on('ready', () => {
             contextIsolation: false
         }
     });
-    mainWindow.loadFile('dist/renderer/index.html');
+    // mainWindow.loadFile('dist/renderer/index.html');
+    mainWindow.loadURL('http://localhost:8080/index.html');
 });
 
 app.on('window-all-closed', () => {
+    console.log('all-closed');
     destroyWindow();
-    app.exit(0);
+    app.exit();
 });
