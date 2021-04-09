@@ -1,4 +1,5 @@
 import { app, ipcMain, BrowserWindow } from 'electron';
+import isDev from 'electron-is-dev';
 
 let mainWindow: BrowserWindow | null = null;
 let demoWindow: BrowserWindow | null = null;
@@ -26,8 +27,12 @@ ipcMain.on('open-demo-window', () => {
                 contextIsolation: false
             }
         });
-        // demoWindow.loadFile('dist/renderer/demo.html');
-        demoWindow.loadURL('http://localhost:8080/demo.html');
+
+        if (isDev) {
+            demoWindow.loadURL('http://localhost:8080/demo.html');
+        } else {
+            demoWindow.loadFile('dist/demo.html');
+        }
     } else {
         demoWindow.show();
     }
@@ -46,8 +51,11 @@ app.on('ready', () => {
             contextIsolation: false
         }
     });
-    // mainWindow.loadFile('dist/renderer/index.html');
-    mainWindow.loadURL('http://localhost:8080/index.html');
+    if (isDev) {
+        mainWindow.loadURL('http://localhost:8080/index.html');
+    } else {
+        mainWindow.loadFile('dist/index.html');
+    }
 });
 
 app.on('window-all-closed', () => {
